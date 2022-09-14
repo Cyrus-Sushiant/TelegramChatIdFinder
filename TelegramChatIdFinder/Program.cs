@@ -2,12 +2,18 @@
 
 var token = "";
 var botClient = new TelegramBotClient(token);
+Console.WriteLine("Send a message to your telegram bot.");
 
-var messages = await botClient.GetUpdatesAsync();
-
-foreach (var item in messages)
+int offset = 0;
+while (true)
 {
-    Console.WriteLine($"ChatId: {item.Message.Chat.Id} => UserName: {item.Message.Chat.Username}");
-}
+    var messages = await botClient.GetUpdatesAsync(offset);
 
-Console.ReadLine();
+    foreach (var item in messages)
+    {
+        offset = item.Id + 1;
+        Console.WriteLine($"ChatId: {item.Message.Chat.Id} => UserName: {item.Message.Chat.Username}");
+    }
+
+    await Task.Delay(1000);
+}
